@@ -35,7 +35,11 @@
 //!
 //! [RFC6238]: https://tools.ietf.org/html/rfc6238
 
+#![cfg_attr(not(test), no_std)]
 #![doc(html_root_url = "https://docs.rs/totp-lite/1.0.3")]
+
+#[cfg(feature = "std")]
+extern crate std;
 
 use digest::{
     block_buffer::Eager,
@@ -71,7 +75,7 @@ pub const DEFAULT_DIGITS: u32 = 8;
 /// assert_eq!(8, result.len());
 /// assert_eq!("71788658", totp::<Sha512>(password, 1234567890)); // 2009 February 13.
 /// ```
-pub fn totp<H>(secret: &[u8], time: u64) -> String
+pub fn totp<H>(secret: &[u8], time: u64) -> u64
 where
     H: Update + FixedOutput + CoreProxy,
     H::Core: HashMarker
@@ -102,7 +106,7 @@ where
 /// let result: String = totp_custom::<Sha512>(DEFAULT_STEP, 10, password, seconds);
 /// assert_eq!(10, result.len());
 /// ```
-pub fn totp_custom<H>(step: u64, digits: u32, secret: &[u8], time: u64) -> String
+pub fn totp_custom<H>(step: u64, digits: u32, secret: &[u8], time: u64) -> u64
 where
     H: Update + FixedOutput + CoreProxy,
     H::Core: HashMarker
@@ -116,7 +120,7 @@ where
 {
     // Hash the secret and the time together.
     let mut mac = <Hmac<H> as Mac>::new_from_slice(secret).unwrap();
-    <Hmac<H> as Update>::update(&mut mac, &to_bytes(time / step));
+    <Hmac<H> as Update>::update(&mut mac, &(time / step).to_be_bytes());
     let hash: &[u8] = &mac.finalize().into_bytes();
 
     // Magic from the RFC.
@@ -126,15 +130,7 @@ where
         | ((hash[offset + 2] as u64) << 8)
         | (hash[offset + 3] as u64);
 
-    format!("{:01$}", binary % (10_u64.pow(digits)), digits as usize)
-}
-
-/// Convert a `u64` into its individual bytes.
-fn to_bytes(n: u64) -> [u8; 8] {
-    let mask = 0x00000000000000ff;
-    let mut bytes: [u8; 8] = [0; 8];
-    (0..8).for_each(|i| bytes[7 - i] = (mask & (n >> (i * 8))) as u8);
-    bytes
+    binary % (10_u64.pow(digits))
 }
 
 #[cfg(test)]
@@ -143,14 +139,14 @@ mod tests {
 
     #[test]
     fn to_bytes_test() {
-        assert_eq!(vec![0, 0, 0, 0, 0, 0, 0, 1], to_bytes(59 / DEFAULT_STEP));
+        assert_eq!(vec![0, 0, 0, 0, 0, 0, 0, 1], (59 / DEFAULT_STEP).to_be_bytes());
         assert_eq!(
             vec![0, 0, 0, 0, 0x02, 0x35, 0x23, 0xec],
-            to_bytes(1111111109 / DEFAULT_STEP)
+            (1111111109 / DEFAULT_STEP).to_be_bytes()
         );
         assert_eq!(
             vec![0, 0, 0, 0, 0x27, 0xbc, 0x86, 0xaa],
-            to_bytes(20000000000 / DEFAULT_STEP)
+            (20000000000 / DEFAULT_STEP).to_be_bytes()
         );
     }
 
@@ -158,11 +154,11 @@ mod tests {
     fn variable_length() {
         let secret: &[u8] = b"12345678901234567890123456789012";
         assert_eq!(
-            "2102975832",
+            2102975832,
             totp_custom::<Sha256>(DEFAULT_STEP, 10, secret, 100)
         );
         assert_eq!(
-            "975832",
+            975832,
             totp_custom::<Sha256>(DEFAULT_STEP, 6, secret, 100)
         );
     }
@@ -173,12 +169,12 @@ mod tests {
         assert_eq!(20, secret.len());
 
         let pairs = vec![
-            ("94287082", 59),
-            ("07081804", 1111111109),
-            ("14050471", 1111111111),
-            ("89005924", 1234567890),
-            ("69279037", 2000000000),
-            ("65353130", 20000000000),
+            (94287082, 59),
+            (07081804, 1111111109),
+            (14050471, 1111111111),
+            (89005924, 1234567890),
+            (69279037, 2000000000),
+            (65353130, 20000000000),
         ];
 
         pairs.into_iter().for_each(|(expected, time)| {
@@ -192,12 +188,12 @@ mod tests {
         assert_eq!(32, secret.len());
 
         let pairs = vec![
-            ("46119246", 59),
-            ("68084774", 1111111109),
-            ("67062674", 1111111111),
-            ("91819424", 1234567890),
-            ("90698825", 2000000000),
-            ("77737706", 20000000000),
+            (46119246, 59),
+            (68084774, 1111111109),
+            (67062674, 1111111111),
+            (91819424, 1234567890),
+            (90698825, 2000000000),
+            (77737706, 20000000000),
         ];
 
         pairs.into_iter().for_each(|(expected, time)| {
@@ -211,12 +207,12 @@ mod tests {
         assert_eq!(64, secret.len());
 
         let pairs = vec![
-            ("90693936", 59),
-            ("25091201", 1111111109),
-            ("99943326", 1111111111),
-            ("93441116", 1234567890),
-            ("38618901", 2000000000),
-            ("47863826", 20000000000),
+            (90693936, 59),
+            (25091201, 1111111109),
+            (99943326, 1111111111),
+            (93441116, 1234567890),
+            (38618901, 2000000000),
+            (47863826, 20000000000),
         ];
 
         pairs.into_iter().for_each(|(expected, time)| {

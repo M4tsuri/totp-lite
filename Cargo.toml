@@ -1,5 +1,5 @@
 [package]
-name = "totp-lite"
+name = "totp-embed"
 version = "1.0.3"
 authors = ["Colin Woodbury <colin@fosskers.ca>"]
 edition = "2018"
@@ -8,17 +8,21 @@ homepage = "https://github.com/fosskers/totp-lite"
 repository = "https://github.com/fosskers/totp-lite"
 readme = "README.md"
 license = "MIT"
-keywords = ["authentication", "totp", "otp", "2fa"]
+keywords = ["authentication", "totp", "otp", "2fa", "no_std", "embedded"]
 categories = ["authentication"]
 
 [badges]
 github = { repository = "fosskers/totp-lite", branch = "master", workflow = "Rust" }
 
 [dependencies]
-digest = "0.10"
-hmac = "0.12"
-sha-1 = "0.10"
-sha2 = "0.10"
+digest = { version = "0.10", default-features = false }
+hmac = { version = "0.12", default-features = false }
+sha-1 = { version = "0.10", default-features = false }
+sha2 = { version = "0.10", default-features = false }
+
+[features]
+default = ["std"]
+std = ["hmac/std", "digest/std", "sha-1/std", "sha2/std"]
 
 [dev-dependencies]
 version-sync = "0.9"
