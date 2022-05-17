@@ -8,7 +8,7 @@ homepage = "https://github.com/M4tsuri/totp_embed"
 repository = "https://github.com/M4tsuri/totp_embed"
 readme = "README.md"
 license = "MIT"
-keywords = ["authentication", "totp", "otp", "2fa", "no_std", "embedded"]
+keywords = ["totp", "otp", "2fa", "no_std", "embedded"]
 categories = ["authentication"]
 
 [badges]
