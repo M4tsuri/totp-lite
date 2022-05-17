@@ -1,4 +1,4 @@
-[![Workflow Status](https://github.com/M4tsuri/totp_embed/workflows/Rust/badge.svg)](https://github.com/fosskers/totp-lite/actions?query=workflow%3A%22Rust%22)
+[![Workflow Status](https://github.com/M4tsuri/totp_embed/workflows/Rust/badge.svg)](https://github.com/M4tsuri/totp_embed/actions?query=workflow%3A%22Rust%22)
 [![](https://img.shields.io/crates/v/totp_embed.svg)](https://crates.io/crates/totp_embed)
 
 # totp_embed
