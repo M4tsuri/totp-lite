@@ -35,7 +35,7 @@
 //! [RFC6238]: https://tools.ietf.org/html/rfc6238
 
 #![cfg_attr(not(test), no_std)]
-#![doc(html_root_url = "https://docs.rs/totp-lite/1.0.3")]
+#![doc(html_root_url = "https://docs.rs/totp_embed/1.0.5")]
 
 #[cfg(feature = "std")]
 extern crate std;
@@ -60,7 +60,7 @@ pub const DEFAULT_DIGITS: u32 = 8;
 ///
 /// ```
 /// use std::time::{SystemTime, UNIX_EPOCH};
-/// use totp_lite::{totp, Sha512};
+/// use totp_embed::{totp, Sha512};
 ///
 /// // Negotiated between you and the authenticating service.
 /// let password: &[u8] = b"secret";
@@ -92,7 +92,7 @@ where
 ///
 /// ```
 /// use std::time::{SystemTime, UNIX_EPOCH};
-/// use totp_lite::{totp_custom, Sha512, DEFAULT_STEP};
+/// use totp_embed::{totp_custom, Sha512, DEFAULT_STEP};
 ///
 /// // Negotiated between you and the authenticating service.
 /// let password: &[u8] = b"secret";
