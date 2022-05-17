@@ -14,7 +14,7 @@
 use koibumi_base32 as base32;
 use std::io::{self, Write};
 use std::time::SystemTime;
-use totp_lite::{totp_custom, Sha1, DEFAULT_STEP};
+use totp_embed::{totp_custom, Sha1, DEFAULT_STEP};
 
 fn main() {
     println!("Press ctrl-c to cancel.");
