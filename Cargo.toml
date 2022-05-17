@@ -12,7 +12,7 @@ keywords = ["totp", "otp", "2fa", "no_std", "embedded"]
 categories = ["authentication"]
 
 [badges]
-github = { repository = "m4tsuri/totp_embed", branch = "master", workflow = "Rust" }
+github = { repository = "M4tsuri/totp_embed", branch = "master", workflow = "Rust" }
 
 [dependencies]
 digest = { version = "0.10", default-features = false }
