@@ -1,6 +1,6 @@
 [package]
 name = "totp_embed"
-version = "1.0.3"
+version = "1.0.4"
 authors = ["Colin Woodbury <colin@fosskers.ca>", "M4tsuri <me@m4tsuri.com>"]
 edition = "2021"
 description = "A fork of totp-lite for embedded environment."
@@ -21,7 +21,6 @@ sha-1 = { version = "0.10", default-features = false }
 sha2 = { version = "0.10", default-features = false }
 
 [features]
-default = ["std"]
 std = ["hmac/std", "digest/std", "sha-1/std", "sha2/std"]
 
 [dev-dependencies]
